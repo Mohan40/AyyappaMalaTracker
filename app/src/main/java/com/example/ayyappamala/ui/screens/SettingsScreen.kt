@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
@@ -23,6 +24,7 @@ import com.example.ayyappamala.ui.MalaViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(viewModel: MalaViewModel) {
     val context = LocalContext.current
@@ -33,6 +35,7 @@ fun SettingsScreen(viewModel: MalaViewModel) {
     var totalDaysStr by remember(profile.totalDays) { mutableStateOf(profile.totalDays.toString()) }
 
     var showResetDialog by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     // Export launcher
     val mimeTypeJson = "application/json"
@@ -163,23 +166,50 @@ fun SettingsScreen(viewModel: MalaViewModel) {
                         shape = RoundedCornerShape(12.dp)
                     )
 
-                    Row(
+                    // Start Date Picker Row & Reset
+                    Card(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                        shape = RoundedCornerShape(12.dp)
                     ) {
-                        Text(
-                            text = "Start Date: $startDateStr",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "Mala Start Date: $startDateStr",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold
+                            )
 
-                        TextButton(onClick = {
-                            val newProfile = profile.copy(startDateEpoch = System.currentTimeMillis())
-                            viewModel.updateProfile(newProfile)
-                            Toast.makeText(context, "Start date reset to today!", Toast.LENGTH_SHORT).show()
-                        }) {
-                            Text("Reset Start to Today")
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                OutlinedButton(
+                                    onClick = { showDatePicker = true },
+                                    modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(10.dp)
+                                ) {
+                                    Icon(imageVector = Icons.Default.DateRange, contentDescription = null, modifier = Modifier.size(18.dp))
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Pick Start Date")
+                                }
+
+                                OutlinedButton(
+                                    onClick = {
+                                        val newProfile = profile.copy(startDateEpoch = System.currentTimeMillis())
+                                        viewModel.updateProfile(newProfile)
+                                        Toast.makeText(context, "Start date reset to today!", Toast.LENGTH_SHORT).show()
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                    shape = RoundedCornerShape(10.dp)
+                                ) {
+                                    Text("Reset to Today")
+                                }
+                            }
                         }
                     }
 
@@ -300,6 +330,33 @@ fun SettingsScreen(viewModel: MalaViewModel) {
 
         item {
             Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+
+    // Material 3 Date Picker Dialog
+    if (showDatePicker) {
+        val datePickerState = rememberDatePickerState(initialSelectedDateMillis = profile.startDateEpoch)
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDatePicker = false
+                    datePickerState.selectedDateMillis?.let { millis ->
+                        val newProfile = profile.copy(startDateEpoch = millis)
+                        viewModel.updateProfile(newProfile)
+                        Toast.makeText(context, "Start date updated successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
 
