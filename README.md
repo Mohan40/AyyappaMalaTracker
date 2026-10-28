@@ -17,6 +17,16 @@ A modern, secure, **100% Free and Open Source (FOSS)** Android application built
 
 ---
 
+## 🟢 F-Droid Compliance & FOSS Standards
+
+This project is fully designed to comply with **F-Droid inclusion criteria**:
+- **100% Free & Open Source**: Licensed under the **MIT License**.
+- **No Proprietary Dependencies**: Built entirely with free and open-source Android Jetpack and Compose libraries. No closed-source analytics, ads, or tracking SDKs (such as Firebase, Crashlytics, or AdMob).
+- **Zero Permissions**: Requires no dangerous runtime permissions in `AndroidManifest.xml`.
+- **Complete Source Build**: Compiles directly from source using Gradle.
+
+---
+
 ## 🙏 Credits & Acknowledgments
 
 We extend our heartfelt gratitude and credits to everyone who made this project possible:
