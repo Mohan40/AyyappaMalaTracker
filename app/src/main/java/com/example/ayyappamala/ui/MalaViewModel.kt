@@ -11,7 +11,6 @@ import com.example.ayyappamala.data.getTodayDateKey
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.InputStream
 import java.io.OutputStream
@@ -43,19 +42,32 @@ class MalaViewModel(application: Application) : AndroidViewModel(application) {
     fun loadData() {
         viewModelScope.launch {
             val data = repository.loadData()
-            _profile.value = data.profile
+            var currentProfile = data.profile
+
+            // Check daily auto-backup if enabled
+            if (currentProfile.autoBackupEnabled) {
+                val today = getTodayDateKey()
+                if (currentProfile.lastAutoBackupDate != today) {
+                    val success = repository.performAutoBackup()
+                    if (success) {
+                        currentProfile = currentProfile.copy(lastAutoBackupDate = today)
+                        repository.saveData(MalaExportData(currentProfile, data.logs))
+                    }
+                }
+            }
+
+            _profile.value = currentProfile
             _dailyLogs.value = data.logs
             
             val todayKey = getTodayDateKey()
             val existingToday = data.logs.find { it.dateKey == todayKey } ?: DailyLog(dateKey = todayKey)
             _todayLog.value = existingToday
 
-            calculateMetrics(data.profile, data.logs)
+            calculateMetrics(currentProfile, data.logs)
         }
     }
 
     private fun calculateMetrics(profile: MalaProfile, logs: List<DailyLog>) {
-        // Calculate current day number based on start date
         val startCal = Calendar.getInstance().apply {
             timeInMillis = profile.startDateEpoch
             set(Calendar.HOUR_OF_DAY, 0)
@@ -74,7 +86,6 @@ class MalaViewModel(application: Application) : AndroidViewModel(application) {
         val diffDays = TimeUnit.MILLISECONDS.toDays(diffMillis).toInt() + 1
         _currentDayNumber.value = maxOf(1, minOf(profile.totalDays, diffDays))
 
-        // Calculate streak (consecutive days with >= 5 tasks completed)
         var streak = 0
         val sortedLogs = logs.sortedByDescending { it.dateKey }
         for (log in sortedLogs) {
@@ -111,6 +122,17 @@ class MalaViewModel(application: Application) : AndroidViewModel(application) {
             _profile.value = newProfile
             repository.saveData(MalaExportData(newProfile, _dailyLogs.value))
             calculateMetrics(newProfile, _dailyLogs.value)
+        }
+    }
+
+    fun toggleAutoBackup(enabled: Boolean) {
+        viewModelScope.launch {
+            val updated = _profile.value.copy(autoBackupEnabled = enabled)
+            _profile.value = updated
+            repository.saveData(MalaExportData(updated, _dailyLogs.value))
+            if (enabled) {
+                repository.performAutoBackup()
+            }
         }
     }
 

@@ -8,7 +8,9 @@ data class MalaProfile(
     val startDateEpoch: Long = System.currentTimeMillis(),
     val totalDays: Int = 41,
     val swamyName: String = "Swami Ayyappa Devotee",
-    val malaNumber: String = "Mala #1"
+    val malaNumber: String = "Mala #1",
+    val autoBackupEnabled: Boolean = false,
+    val lastAutoBackupDate: String = ""
 )
 
 data class DailyLog(

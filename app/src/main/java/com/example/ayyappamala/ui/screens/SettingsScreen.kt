@@ -258,6 +258,37 @@ fun SettingsScreen(viewModel: MalaViewModel) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
+                    // Daily Auto-Backup Toggle
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Daily Automatic Backup",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Text(
+                                text = "Automatically save local backup once a day",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = profile.autoBackupEnabled,
+                            onCheckedChange = { enabled ->
+                                viewModel.toggleAutoBackup(enabled)
+                                Toast.makeText(
+                                    context,
+                                    if (enabled) "Daily auto-backup enabled" else "Daily auto-backup disabled",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        )
+                    }
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)

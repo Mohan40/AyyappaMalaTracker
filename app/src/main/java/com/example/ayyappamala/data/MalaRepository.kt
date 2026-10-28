@@ -24,7 +24,9 @@ class MalaRepository(private val context: Context) {
                     startDateEpoch = profileObj.optLong("startDateEpoch", System.currentTimeMillis()),
                     totalDays = profileObj.optInt("totalDays", 41),
                     swamyName = profileObj.optString("swamyName", "Swami Ayyappa Devotee"),
-                    malaNumber = profileObj.optString("malaNumber", "Mala #1")
+                    malaNumber = profileObj.optString("malaNumber", "Mala #1"),
+                    autoBackupEnabled = profileObj.optBoolean("autoBackupEnabled", false),
+                    lastAutoBackupDate = profileObj.optString("lastAutoBackupDate", "")
                 )
             } else {
                 MalaProfile()
@@ -68,6 +70,8 @@ class MalaRepository(private val context: Context) {
                 put("totalDays", data.profile.totalDays)
                 put("swamyName", data.profile.swamyName)
                 put("malaNumber", data.profile.malaNumber)
+                put("autoBackupEnabled", data.profile.autoBackupEnabled)
+                put("lastAutoBackupDate", data.profile.lastAutoBackupDate)
             }
             root.put("profile", profileObj)
 
@@ -96,6 +100,21 @@ class MalaRepository(private val context: Context) {
         }
     }
 
+    fun performAutoBackup(): Boolean {
+        return try {
+            val autoBackupFile = File(context.filesDir, "ayyappa_mala_autobackup.json")
+            if (file.exists()) {
+                file.copyTo(autoBackupFile, overwrite = true)
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
     fun exportToUri(outputStream: OutputStream): Boolean {
         return try {
             val data = loadData()
@@ -105,6 +124,8 @@ class MalaRepository(private val context: Context) {
                 put("totalDays", data.profile.totalDays)
                 put("swamyName", data.profile.swamyName)
                 put("malaNumber", data.profile.malaNumber)
+                put("autoBackupEnabled", data.profile.autoBackupEnabled)
+                put("lastAutoBackupDate", data.profile.lastAutoBackupDate)
             }
             root.put("profile", profileObj)
 
