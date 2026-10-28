@@ -164,31 +164,12 @@ fun HomeScreen(viewModel: MalaViewModel) {
             }
         }
 
-        // Checklist Items
+        // Checklist Items (Chronological Timing Order: Morning -> Day -> Evening -> Night)
         item {
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                ChecklistItemCard(
-                    title = "Morning Cold Bath",
-                    subtitle = "Purification before dawn prayer",
-                    icon = Icons.Default.Refresh,
-                    checked = todayLog.morningBath,
-                    onCheckedChange = { checked ->
-                        viewModel.updateTodayLog { it.copy(morningBath = checked) }
-                    }
-                )
-
-                ChecklistItemCard(
-                    title = "Evening Bath",
-                    subtitle = "Bathing before evening pooja",
-                    icon = Icons.Default.Refresh,
-                    checked = todayLog.eveningBath,
-                    onCheckedChange = { checked ->
-                        viewModel.updateTodayLog { it.copy(eveningBath = checked) }
-                    }
-                )
-
+                // 1. Morning / Continuous
                 ChecklistItemCard(
                     title = "Wearing Mala & Rudraksha",
                     subtitle = "Consecrated beads worn continuously",
@@ -199,6 +180,18 @@ fun HomeScreen(viewModel: MalaViewModel) {
                     }
                 )
 
+                // 2. Morning Bath
+                ChecklistItemCard(
+                    title = "Morning Cold Bath",
+                    subtitle = "Purification before dawn prayer",
+                    icon = Icons.Default.Refresh,
+                    checked = todayLog.morningBath,
+                    onCheckedChange = { checked ->
+                        viewModel.updateTodayLog { it.copy(morningBath = checked) }
+                    }
+                )
+
+                // 3. Morning Prayer
                 ChecklistItemCard(
                     title = "Morning Puja & Namajpam",
                     subtitle = "108 Ayyappa Saranam / Vishnu Sahasranamam",
@@ -209,16 +202,7 @@ fun HomeScreen(viewModel: MalaViewModel) {
                     }
                 )
 
-                ChecklistItemCard(
-                    title = "Evening Puja & Harivarasanam",
-                    subtitle = "Deeparadhana & Harivarasanam recitation",
-                    icon = Icons.Default.NightsStay,
-                    checked = todayLog.eveningPrayer,
-                    onCheckedChange = { checked ->
-                        viewModel.updateTodayLog { it.copy(eveningPrayer = checked) }
-                    }
-                )
-
+                // 4. Daily Diet
                 ChecklistItemCard(
                     title = "Strict Sattvic Diet",
                     subtitle = "Pure vegetarian (no onion/garlic, single meals if observed)",
@@ -229,6 +213,7 @@ fun HomeScreen(viewModel: MalaViewModel) {
                     }
                 )
 
+                // 5. Daily Purity
                 ChecklistItemCard(
                     title = "Brahmacharya (Celibacy)",
                     subtitle = "Mental and physical purity & detachment",
@@ -239,6 +224,7 @@ fun HomeScreen(viewModel: MalaViewModel) {
                     }
                 )
 
+                // 6. Daily Mindset
                 ChecklistItemCard(
                     title = "Truth, Patience & 'Swami' Address",
                     subtitle = "Speaking truth, practicing patience, seeing Ayyappa in all",
@@ -249,6 +235,29 @@ fun HomeScreen(viewModel: MalaViewModel) {
                     }
                 )
 
+                // 7. Evening Bath
+                ChecklistItemCard(
+                    title = "Evening Bath",
+                    subtitle = "Bathing before evening pooja",
+                    icon = Icons.Default.Refresh,
+                    checked = todayLog.eveningBath,
+                    onCheckedChange = { checked ->
+                        viewModel.updateTodayLog { it.copy(eveningBath = checked) }
+                    }
+                )
+
+                // 8. Evening Prayer
+                ChecklistItemCard(
+                    title = "Evening Puja & Harivarasanam",
+                    subtitle = "Deeparadhana & Harivarasanam recitation",
+                    icon = Icons.Default.NightsStay,
+                    checked = todayLog.eveningPrayer,
+                    onCheckedChange = { checked ->
+                        viewModel.updateTodayLog { it.copy(eveningPrayer = checked) }
+                    }
+                )
+
+                // 9. Temple / Bhajans
                 ChecklistItemCard(
                     title = "Temple / Bhajans Attendance",
                     subtitle = "Visiting temple or participating in evening Bhajans",
