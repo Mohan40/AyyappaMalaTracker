@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -103,11 +105,17 @@ fun MainScreen(viewModel: MalaViewModel) {
                 .padding(innerPadding),
             color = MaterialTheme.colorScheme.background
         ) {
-            when (selectedRoute) {
-                Screen.Home.route -> HomeScreen(viewModel = viewModel)
-                Screen.History.route -> HistoryScreen(viewModel = viewModel)
-                Screen.Guide.route -> GuideScreen()
-                Screen.Settings.route -> SettingsScreen(viewModel = viewModel)
+            Crossfade(
+                targetState = selectedRoute,
+                animationSpec = tween(300),
+                label = "ScreenTransition"
+            ) { route ->
+                when (route) {
+                    Screen.Home.route -> HomeScreen(viewModel = viewModel)
+                    Screen.History.route -> HistoryScreen(viewModel = viewModel)
+                    Screen.Guide.route -> GuideScreen()
+                    Screen.Settings.route -> SettingsScreen(viewModel = viewModel)
+                }
             }
         }
     }
