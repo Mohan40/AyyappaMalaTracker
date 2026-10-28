@@ -2,7 +2,7 @@
 
 A modern, secure, **100% Free and Open Source (FOSS)** Android application built with **Jetpack Compose** and **Material 3** for tracking and following the **Ayyappa Mala Vratham** (Mandala/Makara Vilakku 41-day observance).
 
-> **Note**: This project was **vibe coded** with devotion for personal sadhana and is freely shared with the open-source and Ayyappa devotee community.
+> **Note**: This project was **vibe coded** for personal sadhana.
 
 ---
 
