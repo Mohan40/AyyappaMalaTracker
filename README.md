@@ -17,6 +17,14 @@ A modern, secure, **100% Free and Open Source (FOSS)** Android application built
 
 ---
 
+## 📱 App Screenshots
+
+| Daily Tracker | History & Analytics | Guide & Mantras | Profile & Settings |
+| :---: | :---: | :---: | :---: |
+| ![Tracker](screenshots/screenshot-tracker.png) | ![History](screenshots/screenshot-history.png) | ![Guide](screenshots/screenshot-guide.png) | ![Settings](screenshots/screenshot-settings.png) |
+
+---
+
 ## 🟢 F-Droid Compliance & FOSS Standards
 
 This project is fully designed to comply with **F-Droid inclusion criteria**:
